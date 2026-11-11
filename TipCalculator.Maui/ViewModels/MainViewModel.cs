@@ -1,0 +1,84 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using TipCalculator.Maui.Models;
+
+namespace TipCalculator.Maui.ViewModels
+{
+    public partial class MainViewModel : ObservableObject
+    {
+        // Variable de instancia para datos de entrada de la IU
+        [ObservableProperty]
+        private string _importeDelConsumo;
+        [ObservableProperty]
+        private string _numeroDePersonas;
+        [ObservableProperty]
+        private string _porcentajeDePropina;
+
+        //Variables de instancia para resultados de la UI
+        [ObservableProperty]
+        public string _importeDelConsumoDuplicado;
+        [ObservableProperty]
+        public string _importeDelConsumoPorPersona;
+        [ObservableProperty]
+        public string _importeDeLaPropina;
+        [ObservableProperty]
+        public string _importeDeLaPropinaPorPersona;
+        [ObservableProperty]
+        public string _importeTotalConPropina;
+        [ObservableProperty]
+        public string _importeTotalConPropinaPorPerona;
+
+        public MainViewModel()
+        {
+            Limpiar();
+        }
+
+        [RelayCommand]
+        public void CalcularPropina()
+        {
+            decimal importeDelConsumo;
+            int numeroDePersonas;
+            decimal porcentajeDePropinas;
+
+            bool importeDelConsumoEsValido = decimal.TryParse(ImporteDelConsumo, out importeDelConsumo);
+            bool numeroDePersonasEsValido = int.TryParse(NumeroDePersonas, out numeroDePersonas);
+            bool porcentajeDePropinasEsValido = decimal.TryParse(PorcentajeDePropina, out porcentajeDePropinas);
+            if (importeDelConsumoEsValido && numeroDePersonasEsValido && porcentajeDePropinasEsValido)
+            {
+                var consumo = new ConsumoCompartido(importeDelConsumo, numeroDePersonas, porcentajeDePropinas);
+                ImporteDelConsumoDuplicado = consumo.ImporteDelConsumo.ToString("C2");
+                ImporteDelConsumoPorPersona = consumo.ImporteDeLaPropinaPorPersona.ToString("C2");
+                ImporteDeLaPropina = consumo.ImporteDeLaPropina.ToString("C2");
+                ImporteDeLaPropinaPorPersona = consumo.ImporteDeLaPropinaPorPersona.ToString("C2");
+                ImporteTotalConPropina = consumo.ImporteTotalConPropina.ToString("C2");
+                ImporteTotalConPropinaPorPerona = consumo.ImporteTotoalConPropinaPorPersona.ToString("C2");
+            }
+
+
+        }
+
+        [RelayCommand]
+        public void Limpiar()
+        {
+            ImporteDelConsumo = string.Empty;
+            NumeroDePersonas = "1";
+            PorcentajeDePropina = "10";
+            ImporteDelConsumoDuplicado = string.Empty;
+            ImporteDeLaPropinaPorPersona = string.Empty;
+            ImporteDeLaPropina = string.Empty;
+            ImporteDeLaPropinaPorPersona = string.Empty;
+            ImporteTotalConPropina = string.Empty;
+            ImporteTotalConPropinaPorPerona = string.Empty;
+        }
+
+        [RelayCommand]
+        public void ActualizarPorcentajeDePropina(string nuevoPorcentaje)
+        {
+            PorcentajeDePropina = nuevoPorcentaje;
+        }
+    }
+    
+}
